@@ -1,0 +1,31 @@
+{
+	"env": {
+		"development": {
+			"presets": [
+				"es2015"
+			],
+			"plugins": [
+				"istanbul"
+			]
+		},
+		"production": {
+			"presets": [
+				"es2015"
+			],
+			"plugins": [
+				"istanbul"
+			]
+		},
+		"test": {
+			"presets": [
+				"es2015-without-strict"
+			],
+			"plugins": [
+				"istanbul"
+			]
+		},
+		"clean": {
+			"plugins": []
+		}
+	}
+}
