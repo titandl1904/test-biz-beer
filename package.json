@@ -18,7 +18,7 @@
     "angular-ui-bootstrap": "2.5.0",
     "bootstrap": "3.3.7",
     "ical.js": "1.2.2",
-    "jquery": "2.1.4",
+    "jquery": "2.2.4",
     "normalize.css": "^8.0.0"
   },
   "devDependencies": {
