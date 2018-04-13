@@ -1,22 +1,31 @@
 <div class="row">
-    <div class="alert {{vm.classTemp}}">
-        The current temperature for now in Sydney is <span class="show-degree">{{vm.tempNow}}</span><span>C</span>. 
-        <span ng-if="vm.isDanger === 1 && vm.truckStatus.id ==='inloading'"> The temperature is a little hot, we need to down <b>temperature beer range
-            (-<span class="show-degree">{{vm.downTemp}}</span><span>C</span>)</b> to make sure beer is cool enough.
-        </span>
+    <div class="col-md-6">
+        <div class="alert {{vm.classTemp}}">
+            The current temperature for now in Sydney is <span class="show-degree">{{vm.tempNow}}</span><span>C</span>. 
+            <span ng-if="vm.isDanger === 1 && vm.truckStatus.id ==='inloading'"> The temperature is a little hot, we need to down <b>temperature beer range
+                (-<span class="show-degree">{{vm.downTemp}}</span><span>C</span>)</b> to make sure beer is cool enough.
+            </span>
+            <span ng-if="vm.isDanger === 1 && vm.truckStatus.id !=='inloading' && vm.previousDangerLevel === 0">
+                When driving, if the temperature is a little hot, You need to reload beer by click <b>Reload</b> button to make sure your beer is cool. <b>Temperature beer range will down
+                        -<span class="show-degree">{{vm.downTemp}}</span><span>C</span></b>
+            </span>
+            <span ng-if="vm.isDanger === 2 && vm.truckStatus.id ==='inloading'">
+                <b>You can not go with very high temperature. Please wait!!!</b>
+            </span>
 
-
-        <span ng-if="vm.isDanger === 1 && vm.truckStatus.id !=='inloading' && vm.previousDangerLevel === 0">
-            When driving, if the temperature is a little hot, You need to reload beer by click <b>Reload</b> button to make sure your beer is cool. <b>Temperature beer range will down
-                    -<span class="show-degree">{{vm.downTemp}}</span><span>C</span></b>
-        </span>
-        <span ng-if="vm.isDanger === 2 && vm.truckStatus.id ==='inloading'">
-            <b>You can not go with very high temperature. Please wait!!!</b>
-        </span>
-
-        <span ng-if="vm.isDanger === 2 && vm.truckStatus.id !=='inloading'">
-            <b>If you are still driving, you need to find the place cool to make sure the bear is not corrupted.</b>
-        </span>
+            <span ng-if="vm.isDanger === 2 && vm.truckStatus.id !=='inloading'">
+                <b>If you are still driving, you need to find the place cool to make sure the bear is not corrupted.</b>
+            </span>
+            
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="alert alert-danger" ng-if="vm.messageErrorOutofRange && vm.messageErrorOutofRange.length > 0">
+            <p ng-repeat="error in vm.messageErrorOutofRange">
+                Out of temperature in container {{error.containerId}} with temperature 
+                <span class="show-degree">{{error.degree}}</span><span>C</span>
+            </p>
+        </div>
     </div>
 </div>
 
@@ -40,7 +49,9 @@
                     <td>
                         <span class="show-degree">{{bear.minDegree}}</span><span>{{bear.typeOfDegree}}</span> - 
                         <span class="show-degree">{{bear.maxDegree}}</span><span>{{bear.typeOfDegree}}</span>
-                        <span class="temp-warning">(-<span class="show-degree">{{vm.downTemp}}</span><span>C</span>)</span>
+                        <span class="temp-warning" ng-if="vm.isDanger === 1">
+                            (-<span class="show-degree">{{vm.downTemp}}</span><span>C</span>)
+                        </span>
                     </td>
                     <td><input type="number" min="0" ng-keydown="vm.preventNagative($event)" ng-model="bear.capacity" ng-readonly="vm.truckStatus.id !=='inloading' || vm.isDanger === 2" /></td>
                     <td><span class="current-cap" ng-if="bear.currentCap">{{bear.currentCap}} liters</span></td>

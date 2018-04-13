@@ -96,6 +96,18 @@ class TruckContainerService {
         this.setStatusTruck('inloading');
     }
 
+    getMockTempeTruckContainer() {
+        const data = this.getTruckContainer();
+        const rangeTempeChange = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+        data.map(con => {
+            const tempChange = rangeTempeChange[Math.floor(Math.random() * rangeTempeChange.length)];
+            con.degree += tempChange;
+            return con;
+        });
+
+        return data;
+    }
+
     getTruckContainer() {
         if (this.getCurrentStatusTruck().id !== 'inloading') {
             let dataDriving = JSON.parse(localStorage.getItem('dataDriving'));

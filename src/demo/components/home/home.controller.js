@@ -39,6 +39,10 @@ class HomeController {
             }
             this.setupContainter();
             this.setupStatusTruck();
+
+            if (this.truckStatus.id !== 'inloading') {
+                this.checkTempeChangeContainer();
+            }
             // prevent negative number when input beer capacity
             this.$timeout(() => {
                 this.preventNegative();
@@ -50,7 +54,34 @@ class HomeController {
 
     setupContainter() {
         this.listTypeOfBear = this.BearService.getListTypeOfBear();
-        this.listContainer = this.TruckContainerService.getTruckContainer();
+        this.listContainer = this.TruckContainerService.getMockTempeTruckContainer();
+    }
+
+    checkTempeChangeContainer() {
+        //@TODO: Use socket to receive information in real API
+        this.$timeout(() => {
+            this.setupContainter();
+
+            let containerObject = angular.copy(this.listContainer);
+
+            containerObject = containerObject.reduce(function(acc, cur, index) {
+                acc[cur.id] = cur;
+                return acc;
+              }, {});
+            this.messageErrorOutofRange = [];
+            this.listTypeOfBear.map((bear) => {
+                bear.containerId.forEach(container => {
+                    const currentCon = containerObject[parseInt(container.id)];
+                    const minDegree = this.isDanger === 1 ? bear.minDegree - this.downTemp : bear.minDegree;
+                    const maxDegree = this.isDanger === 1 ? bear.maxDegree - this.downTemp : bear.maxDegree;
+
+                    if (currentCon.degree < minDegree || currentCon.degree > maxDegree) {
+                        this.messageErrorOutofRange.push({degree: currentCon.degree, containerId: container.id});
+                    }
+                });
+            });
+            this.checkTempeChangeContainer();
+        }, 5000);
     }
 
     setupStatusTruck() {
@@ -85,6 +116,10 @@ class HomeController {
     }
 
     handleDataForDriving() {
+        this.listContainer.map(container => {
+            container.currentLiter = container.maxLiter;
+            return container;
+        });
         this.listTypeOfBear.map((data) => {
             if (angular.isUndefined(data.capacity) || data.capacity === null) {
                 data.capacity = 0;
@@ -119,7 +154,6 @@ class HomeController {
     }
 
     setupForInDriving() {
-        this.listContainer = this.TruckContainerService.getTruckContainer();
         this.handleDataForDriving();
         const maxValueCap = Math.max.apply(Math,this.listTypeOfBear.map(function(o){return o.capacity;}));
         const maxValueRemain = Math.max.apply(Math,this.listTypeOfBear.map(function(o){return o.currentCap;}));
@@ -144,6 +178,8 @@ class HomeController {
             if (isValid) {
                 this.TruckContainerService.setDataWhenDriving(this.listTypeOfBear, this.listContainer, this.isDanger);
                 this.TruckContainerService.setStatusTruck(status);
+
+                this.checkTempeChangeContainer();
             }
         } else if (status === 'completed') {
             this.TruckContainerService.deleteData();

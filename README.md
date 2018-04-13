@@ -25,4 +25,7 @@ NOTE: Project use `http://samples.openweathermap.org` to get current weather in 
 After you have installed all dependencies, you may run the app.
 
 - Running `npm run serve` using for develop. Go 'http://localhost:8080/' to run the app.
+
+- Running `npm run test` launch unit tests.
+- Running `npm run tdd` auto reload when developing unit tests
 - Running `npm run build` build project.
