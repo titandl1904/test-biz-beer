@@ -1,13 +1,13 @@
 {
-  "name": "test-tabcorp",
+  "name": "testing-baz",
   "version": "1.0.0",
-  "description": "Testing in Tabcorp",
+  "description": "Driving Baz",
   "files": [
     "lib"
   ],
   "keywords": [
     "test",
-    "Tabcorp"
+    "baz"
   ],
   "engines": {
     "node": ">=6.0.0"
@@ -15,12 +15,12 @@
   "dependencies": {
     "@uirouter/angularjs": "1.0.3",
     "angular": "1.6.4",
-    "angular-mocks": "^1.6.9",
+    "angular-mocks": "1.6.9",
     "angular-ui-bootstrap": "2.5.0",
     "bootstrap": "3.3.7",
     "ical.js": "1.2.2",
     "jquery": "2.2.4",
-    "normalize.css": "^8.0.0"
+    "normalize.css": "8.0.0"
   },
   "devDependencies": {
     "apimocker": "0.5.0",

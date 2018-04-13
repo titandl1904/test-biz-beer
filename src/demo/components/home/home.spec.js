@@ -1,7 +1,10 @@
 
 import home from './home.component';
 import 'angular-ui-bootstrap';
-
+import BearService from '../../services/bear.service';
+import TruckContainerService from '../../services/truck-container.service';
+import WeatherService from '../../services/weather.service';
+import '@uirouter/angularjs';
 
 describe('Home Component', () => {
 	let element;
@@ -11,13 +14,22 @@ describe('Home Component', () => {
 	let occurrences;
 	let $uibModal;
 	let $rootScope;
-	let $compile;
+    let $compile;
+    const dataWeather = {
+        main: {
+            temp: 30
+        }
+    };
     beforeEach(() => {
         angular.module('HomeMock', [
-            'ui.bootstrap'
+            'ui.bootstrap',
+            'ui.router'
         ])
-            .component('home', home)
-        angular.mock.module('CalendarFormMock');
+        .service('BearService', BearService)
+        .service('TruckContainerService', TruckContainerService)
+        .service('WeatherService', WeatherService)
+        .component('home', home)
+        angular.mock.module('HomeMock');
     });
 
     beforeEach(() => {
@@ -27,7 +39,9 @@ describe('Home Component', () => {
             scope = $rootScope.$new();
             element = $compile('<home></home>')(scope);
             scope.$digest();
+            $httpBackend.expectGET('.*').respond(200, dataWeather);
             controller = element.controller('home');
+            $httpBackend.flush();
         });
     });
 

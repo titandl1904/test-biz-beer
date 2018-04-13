@@ -1,8 +1,7 @@
 class WeatherService {
 
-	constructor($http, $log) {
+	constructor($http) {
         'ngInject';
-        this.$log = $log;
         this.$http = $http;
         this.weatherURL = '';
     }
@@ -27,8 +26,6 @@ class WeatherService {
                 return null;
             })
 			.catch((error) => {
-				this.$log.error(error);
-				return this.$q.reject();
 			});
     }
 
