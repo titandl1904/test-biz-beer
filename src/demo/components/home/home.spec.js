@@ -15,6 +15,7 @@ describe('Home Component', () => {
 	let $uibModal;
 	let $rootScope;
     let $compile;
+    let truckContainerService;
     const dataWeather = {
         main: {
             temp: 30
@@ -29,17 +30,19 @@ describe('Home Component', () => {
         .service('TruckContainerService', TruckContainerService)
         .service('WeatherService', WeatherService)
         .component('home', home)
+        .constant('WEATHER_INFO', {})
         angular.mock.module('HomeMock');
     });
 
     beforeEach(() => {
-        angular.mock.inject(($httpBackend, _$rootScope_, _$compile_) => {
+        angular.mock.inject(($httpBackend, _$rootScope_, _$compile_, _TruckContainerService_) => {
+            truckContainerService = _TruckContainerService_;
             $compile = _$compile_;
             $rootScope = _$rootScope_;
             scope = $rootScope.$new();
             element = $compile('<home></home>')(scope);
+            $httpBackend.expectGET().respond(200, dataWeather);
             scope.$digest();
-            $httpBackend.expectGET('.*').respond(200, dataWeather);
             controller = element.controller('home');
             $httpBackend.flush();
         });
@@ -47,8 +50,38 @@ describe('Home Component', () => {
 
     describe('Controller', () => {
 		it('Should be defined', () => {
-			expect(controller).toBeDefined();
-		});
-	});
+            expect(controller).toBeDefined();
+            
+        });
+        it('Should check data when controller init', () => {
+            expect(controller.tempNow).toBe(30);
+            expect(controller.isDanger).toBe(0);
+            expect(controller.classTemp).toBe('alert-info');
+        })
+    });
+    
+    describe('Check function in controller', () => {
+
+        it('Should check function setupStatusTruck', () => {
+            truckContainerService.setStatusTruck('indriving');
+            controller.setupStatusTruck();
+            expect(controller.listButtonChangeStatus.length).toBe(3);
+
+            truckContainerService.setStatusTruck('onhold');
+            controller.setupStatusTruck();
+            expect(controller.listButtonChangeStatus.length).toBe(2);
+
+            truckContainerService.setStatusTruck('inholding');
+            controller.setupStatusTruck();
+            expect(controller.listButtonChangeStatus.length).toBe(2);
+        });
+
+        it('Should check function handleDataForDriving', () => {
+            controller.listTypeOfBear[2].capacity = 100;
+            controller.handleDataForDriving();
+            expect(controller.listTypeOfBear[2].currentCap).toBe(0);
+            expect(controller.listTypeOfBear[2].containerId.length).toBe(1);
+        });
+    });
 
 });

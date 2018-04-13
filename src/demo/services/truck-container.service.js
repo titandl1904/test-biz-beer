@@ -83,8 +83,10 @@ class TruckContainerService {
 
     getPreviousDangerLevel() {
         let dataDriving = JSON.parse(localStorage.getItem('dataDriving'));
-
-        return dataDriving.isPreviousDangerLevel;
+        if (angular.isObject(dataDriving)) {
+            return dataDriving.isPreviousDangerLevel;
+        }
+        return 0;
     }
 
     setDataWhenDriving(listTypeOfBear, listContainer, isDanger) {
@@ -96,7 +98,7 @@ class TruckContainerService {
         this.setStatusTruck('inloading');
     }
 
-    getMockTempeTruckContainer() {
+    simulatorTempeTruckContainer() {
         const data = this.getTruckContainer();
         const rangeTempeChange = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
         data.map(con => {
@@ -111,8 +113,10 @@ class TruckContainerService {
     getTruckContainer() {
         if (this.getCurrentStatusTruck().id !== 'inloading') {
             let dataDriving = JSON.parse(localStorage.getItem('dataDriving'));
-            dataDriving = dataDriving.listContainer;
-            return dataDriving;
+            if (angular.isObject(dataDriving)) {
+                dataDriving = dataDriving.listContainer;
+                return dataDriving;
+            }
         }
         this.setupDefaultTruckContainer();
         let data = localStorage.getItem('truckContainer');

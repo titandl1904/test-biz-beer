@@ -54,7 +54,7 @@ class HomeController {
 
     setupContainter() {
         this.listTypeOfBear = this.BearService.getListTypeOfBear();
-        this.listContainer = this.TruckContainerService.getMockTempeTruckContainer();
+        this.listContainer = this.TruckContainerService.simulatorTempeTruckContainer();
     }
 
     checkTempeChangeContainer() {

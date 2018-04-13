@@ -51,8 +51,10 @@ class BearService {
     getListTypeOfBear() {
         if (this.TruckContainerService.getCurrentStatusTruck().id !== 'inloading') {
             let dataDriving = JSON.parse(localStorage.getItem('dataDriving'));
-            dataDriving = dataDriving.listTypeOfBear;
-            return dataDriving;
+            if (angular.isObject(dataDriving)) {
+                dataDriving = dataDriving.listTypeOfBear;
+                return dataDriving;
+            }
         }
         return Object.keys(this.typeOfBear).map((key) => { return this.typeOfBear[key]; });
     }
