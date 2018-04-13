@@ -1,6 +1,6 @@
 class TruckContainerService {
 
-	constructor($http) {
+	constructor() {
         'ngInject';
         
         this.defaultContainer = [

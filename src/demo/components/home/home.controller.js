@@ -41,7 +41,7 @@ class HomeController {
             this.setupStatusTruck();
 
             if (this.truckStatus.id !== 'inloading') {
-                this.checkTempeChangeContainer();
+                this.loopToCheckContainerTempChange();
             }
             // prevent negative number when input beer capacity
             this.$timeout(() => {
@@ -58,29 +58,32 @@ class HomeController {
     }
 
     checkTempeChangeContainer() {
+        this.setupContainter();
+        let containerObject = angular.copy(this.listContainer);
+
+        containerObject = containerObject.reduce(function(acc, cur, index) {
+            acc[cur.id] = cur;
+            return acc;
+            }, {});
+        this.messageErrorOutofRange = [];
+        this.listTypeOfBear.map((bear) => {
+            bear.containerId.forEach(container => {
+                const currentCon = containerObject[parseInt(container.id)];
+                const minDegree = this.isDanger === 1 ? bear.minDegree - this.downTemp : bear.minDegree;
+                const maxDegree = this.isDanger === 1 ? bear.maxDegree - this.downTemp : bear.maxDegree;
+
+                if (currentCon.degree < minDegree || currentCon.degree > maxDegree) {
+                    this.messageErrorOutofRange.push({degree: currentCon.degree, containerId: container.id});
+                }
+            });
+        });
+    }
+
+    loopToCheckContainerTempChange() {
         //@TODO: Use socket to receive information in real API
         this.$timeout(() => {
-            this.setupContainter();
-
-            let containerObject = angular.copy(this.listContainer);
-
-            containerObject = containerObject.reduce(function(acc, cur, index) {
-                acc[cur.id] = cur;
-                return acc;
-              }, {});
-            this.messageErrorOutofRange = [];
-            this.listTypeOfBear.map((bear) => {
-                bear.containerId.forEach(container => {
-                    const currentCon = containerObject[parseInt(container.id)];
-                    const minDegree = this.isDanger === 1 ? bear.minDegree - this.downTemp : bear.minDegree;
-                    const maxDegree = this.isDanger === 1 ? bear.maxDegree - this.downTemp : bear.maxDegree;
-
-                    if (currentCon.degree < minDegree || currentCon.degree > maxDegree) {
-                        this.messageErrorOutofRange.push({degree: currentCon.degree, containerId: container.id});
-                    }
-                });
-            });
             this.checkTempeChangeContainer();
+            this.loopToCheckContainerTempChange();
         }, 5000);
     }
 
@@ -173,28 +176,31 @@ class HomeController {
     }
 
     changeStatus(status) {
-        if (status === 'indriving') {
-            const isValid = this.setupForInDriving();
-            if (isValid) {
-                this.TruckContainerService.setDataWhenDriving(this.listTypeOfBear, this.listContainer, this.isDanger);
+        switch (status) {
+            case 'indriving': 
+                const isValid = this.setupForInDriving();
+                if (isValid) {
+                    this.TruckContainerService.setDataWhenDriving(this.listTypeOfBear, this.listContainer, this.isDanger);
+                    this.TruckContainerService.setStatusTruck(status);
+                    this.loopToCheckContainerTempChange();
+                }
+                break;
+            case 'completed': 
+                this.TruckContainerService.deleteData();
+                this.TruckContainerService.setStatusTruck('inloading');
+                // @TODO: Use this.$state.reload() instead of reload page.
+                this.$window.location.reload();
+                // this.$state.reload();
+                break;
+            case 'onhold':
+            case 'inholding':
                 this.TruckContainerService.setStatusTruck(status);
-
-                this.checkTempeChangeContainer();
-            }
-        } else if (status === 'completed') {
-            this.TruckContainerService.deleteData();
-            this.TruckContainerService.setStatusTruck('inloading');
-            // @TODO: Use this.$state.reload() instead of reload page.
-            this.$window.location.reload();
-            // this.$state.reload();
-        } else if (status === 'onhold') {
-            this.TruckContainerService.setStatusTruck(status);
-        } else if (status === 'inholding') {
-            this.TruckContainerService.setStatusTruck(status);
-        } else if (status === 'reload') {
-            this.TruckContainerService.deleteData();
-            this.TruckContainerService.setStatusTruck('inloading');
-            this.$state.reload();
+                break;
+            case 'reload': 
+                this.TruckContainerService.deleteData();
+                this.TruckContainerService.setStatusTruck('inloading');
+                this.$state.reload();
+                break;
         }
 
         this.setupStatusTruck();

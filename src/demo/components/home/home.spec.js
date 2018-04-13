@@ -31,6 +31,16 @@ describe('Home Component', () => {
         .service('WeatherService', WeatherService)
         .component('home', home)
         .constant('WEATHER_INFO', {})
+        // make sure override function simulate data from truck container
+        .config(($provide) => {
+            $provide.decorator('TruckContainerService', ($delegate) => {
+                $delegate.simulatorTempeTruckContainer = () => {
+                    return $delegate.getTruckContainer();
+                }
+
+                return $delegate;
+            });
+        });
         angular.mock.module('HomeMock');
     });
 
@@ -76,11 +86,55 @@ describe('Home Component', () => {
             expect(controller.listButtonChangeStatus.length).toBe(2);
         });
 
-        it('Should check function handleDataForDriving', () => {
+        it('Should check function setupForInDriving', () => {
             controller.listTypeOfBear[2].capacity = 100;
-            controller.handleDataForDriving();
+            controller.setupForInDriving();
             expect(controller.listTypeOfBear[2].currentCap).toBe(0);
             expect(controller.listTypeOfBear[2].containerId.length).toBe(1);
+        });
+
+        it('Should check function checkTempeChangeContainer', () => {
+            controller.listTypeOfBear[2].capacity = 100;
+            controller.handleDataForDriving();
+            controller.checkTempeChangeContainer();
+            expect(controller.messageErrorOutofRange.length).toBe(0);
+        });
+
+        it('Should check function changeStatus with indriving status', () => {
+            controller.listTypeOfBear[2].capacity = 100;
+            spyOn(truckContainerService, 'setDataWhenDriving');
+            spyOn(truckContainerService, 'setStatusTruck');
+            controller.changeStatus('indriving');
+            expect(truckContainerService.setDataWhenDriving).toHaveBeenCalledWith(
+                controller.listTypeOfBear, controller.listContainer, controller.isDanger
+            );
+            expect(truckContainerService.setStatusTruck).toHaveBeenCalledWith('indriving');
+
+        });
+
+        it('Should check function changeStatus with completed status', () => {
+            controller.listTypeOfBear[2].capacity = 100;
+            spyOn(truckContainerService, 'deleteData');
+            spyOn(truckContainerService, 'setStatusTruck');
+            controller.changeStatus('completed');
+            expect(truckContainerService.deleteData).toHaveBeenCalledWith();
+            expect(truckContainerService.setStatusTruck).toHaveBeenCalledWith('inloading');
+        });
+
+        it('Should check function changeStatus with onhold status', () => {
+            controller.listTypeOfBear[2].capacity = 100;
+            spyOn(truckContainerService, 'setStatusTruck');
+            controller.changeStatus('onhold');
+            expect(truckContainerService.setStatusTruck).toHaveBeenCalledWith('onhold');
+        });
+
+        it('Should check function changeStatus with reload status', () => {
+            controller.listTypeOfBear[2].capacity = 100;
+            spyOn(truckContainerService, 'deleteData');
+            spyOn(truckContainerService, 'setStatusTruck');
+            controller.changeStatus('reload');
+            expect(truckContainerService.deleteData).toHaveBeenCalledWith();
+            expect(truckContainerService.setStatusTruck).toHaveBeenCalledWith('inloading');
         });
     });
 
