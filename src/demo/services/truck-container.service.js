@@ -59,6 +59,9 @@ class TruckContainerService {
         return this.listStatus;
     }
 
+    /*
+        Load truck container by default. If the localStorage is not exist, function will create new item
+    */
     setupDefaultTruckContainer() {
         const truckContainer = localStorage.getItem('truckContainer');
 
@@ -66,7 +69,9 @@ class TruckContainerService {
             localStorage.setItem('truckContainer', JSON.stringify(this.defaultContainer));
         }
     }
-
+    /*
+        Get current status truck from localStorage
+    */
     getCurrentStatusTruck() {
         let data = localStorage.getItem('currentStatus');
         if (angular.isDefined(data) && angular.isObject(this.listStatus[data])) {
@@ -76,11 +81,15 @@ class TruckContainerService {
             return this.listStatus['inloading'];
         }
     }
-
+    /*
+        set status truck
+    */
     setStatusTruck(status) {
         localStorage.setItem('currentStatus', status);
     }
-
+    /*
+        
+    */
     getPreviousDangerLevel() {
         let dataDriving = JSON.parse(localStorage.getItem('dataDriving'));
         if (angular.isObject(dataDriving)) {
@@ -88,16 +97,23 @@ class TruckContainerService {
         }
         return 0;
     }
-
+    /*
+        
+    */
     setDataWhenDriving(listTypeOfBear, listContainer, isDanger) {
         localStorage.setItem('dataDriving', JSON.stringify({listTypeOfBear, listContainer, isPreviousDangerLevel: isDanger}));
     }
-
+    /*
+        
+    */
     deleteData() {
         localStorage.removeItem('dataDriving');
         this.setStatusTruck('inloading');
     }
-
+    /*
+        generate temperature to see temperature is change
+        @TODO: Call API to get real temperature from BE
+    */
     simulatorTempeTruckContainer() {
         const data = this.getTruckContainer();
         const rangeTempeChange = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
@@ -109,7 +125,9 @@ class TruckContainerService {
 
         return data;
     }
-
+    /*
+        Get truck information to show in homepage
+    */
     getTruckContainer() {
         if (this.getCurrentStatusTruck().id !== 'inloading') {
             let dataDriving = JSON.parse(localStorage.getItem('dataDriving'));

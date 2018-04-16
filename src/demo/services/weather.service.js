@@ -6,7 +6,9 @@ class WeatherService {
         this.weatherURL = '';
         this.WEATHER_INFO = WEATHER_INFO;
     }
-
+    /*
+	Get real weather in Sydney to show in homepage
+    */
     getWeatherSydney() {
         const httpConfig = {
 			method: 'GET',

@@ -1,3 +1,10 @@
+/*
+Service: BearService
+- Store data Bear in localStorage
+- Get temperature down when the weather is too hot
+
+*/
+
 class BearService {
 
 	constructor($http, TruckContainerService) {
