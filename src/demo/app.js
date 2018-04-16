@@ -33,9 +33,9 @@ angular.module('app', [
 			url: '/',
 			component: 'home'
 		})
-		.state('typeOfBear', {
-			url: '/type-of-bear',
-			component: 'typeOfBear'
+		.state('typeOfBeer', {
+			url: '/type-of-beer',
+			component: 'typeOfBeer'
 		})
 		.state('truckContainer', {
 			url: '/truck-container',

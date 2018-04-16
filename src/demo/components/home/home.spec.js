@@ -1,7 +1,7 @@
 
 import home from './home.component';
 import 'angular-ui-bootstrap';
-import BearService from '../../services/bear.service';
+import BeerService from '../../services/beer.service';
 import TruckContainerService from '../../services/truck-container.service';
 import WeatherService from '../../services/weather.service';
 import '@uirouter/angularjs';
@@ -26,7 +26,7 @@ describe('Home Component', () => {
             'ui.bootstrap',
             'ui.router'
         ])
-        .service('BearService', BearService)
+        .service('BeerService', BeerService)
         .service('TruckContainerService', TruckContainerService)
         .service('WeatherService', WeatherService)
         .component('home', home)
@@ -87,33 +87,33 @@ describe('Home Component', () => {
         });
 
         it('Should check function setupForInDriving', () => {
-            controller.listTypeOfBear[2].capacity = 100;
+            controller.listTypeOfBeer[2].capacity = 100;
             controller.setupForInDriving();
-            expect(controller.listTypeOfBear[2].currentCap).toBe(0);
-            expect(controller.listTypeOfBear[2].containerId.length).toBe(1);
+            expect(controller.listTypeOfBeer[2].currentCap).toBe(0);
+            expect(controller.listTypeOfBeer[2].containerId.length).toBe(1);
         });
 
         it('Should check function checkTempeChangeContainer', () => {
-            controller.listTypeOfBear[2].capacity = 100;
+            controller.listTypeOfBeer[2].capacity = 100;
             controller.handleDataForDriving();
             controller.checkTempeChangeContainer();
             expect(controller.messageErrorOutofRange.length).toBe(0);
         });
 
         it('Should check function changeStatus with indriving status', () => {
-            controller.listTypeOfBear[2].capacity = 100;
+            controller.listTypeOfBeer[2].capacity = 100;
             spyOn(truckContainerService, 'setDataWhenDriving');
             spyOn(truckContainerService, 'setStatusTruck');
             controller.changeStatus('indriving');
             expect(truckContainerService.setDataWhenDriving).toHaveBeenCalledWith(
-                controller.listTypeOfBear, controller.listContainer, controller.isDanger
+                controller.listTypeOfBeer, controller.listContainer, controller.isDanger
             );
             expect(truckContainerService.setStatusTruck).toHaveBeenCalledWith('indriving');
 
         });
 
         it('Should check function changeStatus with completed status', () => {
-            controller.listTypeOfBear[2].capacity = 100;
+            controller.listTypeOfBeer[2].capacity = 100;
             spyOn(truckContainerService, 'deleteData');
             spyOn(truckContainerService, 'setStatusTruck');
             controller.changeStatus('completed');
@@ -122,14 +122,14 @@ describe('Home Component', () => {
         });
 
         it('Should check function changeStatus with onhold status', () => {
-            controller.listTypeOfBear[2].capacity = 100;
+            controller.listTypeOfBeer[2].capacity = 100;
             spyOn(truckContainerService, 'setStatusTruck');
             controller.changeStatus('onhold');
             expect(truckContainerService.setStatusTruck).toHaveBeenCalledWith('onhold');
         });
 
         it('Should check function changeStatus with reload status', () => {
-            controller.listTypeOfBear[2].capacity = 100;
+            controller.listTypeOfBeer[2].capacity = 100;
             spyOn(truckContainerService, 'deleteData');
             spyOn(truckContainerService, 'setStatusTruck');
             controller.changeStatus('reload');

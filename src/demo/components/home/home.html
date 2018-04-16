@@ -14,7 +14,7 @@
             </span>
 
             <span ng-if="vm.isDanger === 2 && vm.truckStatus.id !=='inloading'">
-                <b>If you are still driving, you need to find the place cool to make sure the bear is not corrupted.</b>
+                <b>If you are still driving, you need to find the place cool to make sure the beer is not corrupted.</b>
             </span>
             
         </div>
@@ -36,7 +36,7 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th>Bear Name</th>
+                    <th>Beer Name</th>
                     <th>Temperature Range</th>
                     <th>Beer Capacity (liter)</th>
                     <th>Remain Capacity</th>
@@ -44,19 +44,19 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="bear in vm.listTypeOfBear">
-                    <td>{{bear.name}}</td>
+                <tr ng-repeat="beer in vm.listTypeOfBeer">
+                    <td>{{beer.name}}</td>
                     <td>
-                        <span class="show-degree">{{bear.minDegree}}</span><span>{{bear.typeOfDegree}}</span> - 
-                        <span class="show-degree">{{bear.maxDegree}}</span><span>{{bear.typeOfDegree}}</span>
+                        <span class="show-degree">{{beer.minDegree}}</span><span>{{beer.typeOfDegree}}</span> - 
+                        <span class="show-degree">{{beer.maxDegree}}</span><span>{{beer.typeOfDegree}}</span>
                         <span class="temp-warning" ng-if="vm.isDanger === 1">
                             (-<span class="show-degree">{{vm.downTemp}}</span><span>C</span>)
                         </span>
                     </td>
-                    <td><input type="number" min="0" ng-keydown="vm.preventNagative($event)" ng-model="bear.capacity" ng-readonly="vm.truckStatus.id !=='inloading' || vm.isDanger === 2" /></td>
-                    <td><span class="current-cap" ng-if="bear.currentCap">{{bear.currentCap}} liters</span></td>
+                    <td><input type="number" min="0" ng-keydown="vm.preventNagative($event)" ng-model="beer.capacity" ng-readonly="vm.truckStatus.id !=='inloading' || vm.isDanger === 2" /></td>
+                    <td><span class="current-cap" ng-if="beer.currentCap">{{beer.currentCap}} liters</span></td>
                     <td>
-                        <p ng-repeat="con in bear.containerId">
+                        <p ng-repeat="con in beer.containerId">
                             <span>Container: {{con.id}}, Capacity: {{con.cap}} liters</span>
                         </p>
                     </td>

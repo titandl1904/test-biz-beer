@@ -26,16 +26,16 @@ The interval will get temperature from container to check temperature is suitabl
 
 class HomeController {
 
-    constructor(WeatherService, BearService, TruckContainerService, $window, $timeout, $state) {
+    constructor(WeatherService, BeerService, TruckContainerService, $window, $timeout, $state) {
         'ngInject';
 
-        this.BearService = BearService;
+        this.BeerService = BeerService;
         this.TruckContainerService = TruckContainerService;
         this.WeatherService = WeatherService;
         this.$window = $window;
         this.$timeout = $timeout;
         this.$state = $state;
-        this.downTemp = this.BearService.getDownTemp();
+        this.downTemp = this.BeerService.getDownTemp();
     }
 
     preventNegative() {
@@ -79,7 +79,7 @@ class HomeController {
     }
 
     setupContainter() {
-        this.listTypeOfBear = this.BearService.getListTypeOfBear();
+        this.listTypeOfBeer = this.BeerService.getListTypeOfBeer();
         this.listContainer = this.TruckContainerService.simulatorTempeTruckContainer();
     }
 
@@ -92,11 +92,11 @@ class HomeController {
             return acc;
             }, {});
         this.messageErrorOutofRange = [];
-        this.listTypeOfBear.map((bear) => {
-            bear.containerId.forEach(container => {
+        this.listTypeOfBeer.map((beer) => {
+            beer.containerId.forEach(container => {
                 const currentCon = containerObject[parseInt(container.id)];
-                const minDegree = this.isDanger === 1 ? bear.minDegree - this.downTemp : bear.minDegree;
-                const maxDegree = this.isDanger === 1 ? bear.maxDegree - this.downTemp : bear.maxDegree;
+                const minDegree = this.isDanger === 1 ? beer.minDegree - this.downTemp : beer.minDegree;
+                const maxDegree = this.isDanger === 1 ? beer.maxDegree - this.downTemp : beer.maxDegree;
 
                 if (currentCon.degree < minDegree || currentCon.degree > maxDegree) {
                     this.messageErrorOutofRange.push({degree: currentCon.degree, containerId: container.id});
@@ -153,7 +153,7 @@ class HomeController {
             container.currentLiter = container.maxLiter;
             return container;
         });
-        this.listTypeOfBear.map((data) => {
+        this.listTypeOfBeer.map((data) => {
             if (angular.isUndefined(data.capacity) || data.capacity === null) {
                 data.capacity = 0;
             }
@@ -190,8 +190,8 @@ class HomeController {
     */
     setupForInDriving() {
         this.handleDataForDriving();
-        const maxValueCap = Math.max.apply(Math,this.listTypeOfBear.map(function(o){return o.capacity;}));
-        const maxValueRemain = Math.max.apply(Math,this.listTypeOfBear.map(function(o){return o.currentCap;}));
+        const maxValueCap = Math.max.apply(Math,this.listTypeOfBeer.map(function(o){return o.capacity;}));
+        const maxValueRemain = Math.max.apply(Math,this.listTypeOfBeer.map(function(o){return o.currentCap;}));
         this.errInputBeerCapacity = false;
         this.errBigCap = false;
         let isValid = true;
@@ -214,7 +214,7 @@ class HomeController {
             case 'indriving': 
                 const isValid = this.setupForInDriving();
                 if (isValid) {
-                    this.TruckContainerService.setDataWhenDriving(this.listTypeOfBear, this.listContainer, this.isDanger);
+                    this.TruckContainerService.setDataWhenDriving(this.listTypeOfBeer, this.listContainer, this.isDanger);
                     this.TruckContainerService.setStatusTruck(status);
                     this.loopToCheckContainerTempChange();
                 }

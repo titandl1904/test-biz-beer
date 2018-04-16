@@ -100,8 +100,8 @@ class TruckContainerService {
     /*
         
     */
-    setDataWhenDriving(listTypeOfBear, listContainer, isDanger) {
-        localStorage.setItem('dataDriving', JSON.stringify({listTypeOfBear, listContainer, isPreviousDangerLevel: isDanger}));
+    setDataWhenDriving(listTypeOfBeer, listContainer, isDanger) {
+        localStorage.setItem('dataDriving', JSON.stringify({listTypeOfBeer, listContainer, isPreviousDangerLevel: isDanger}));
     }
     /*
         
