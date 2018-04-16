@@ -1,3 +1,29 @@
+
+/* 
+@TODO: will generate by esdoc
+
+I set 3 temperature levels:
+I assumed "tempe = temperature"
+- level 1: tempe <= 320C (normal) -> The top message will be Blue
+- level 2:  tempe > 320C & tempe <=400C (hot) -> the top message will be Amber
+- level 3: tempe > 400C (danger) -> the top message will be Red
+
+I implemented these cases: 
+- case 1: If the tempe is normal and the truck status is on loading, there is not alerted to Bar.
+- case 2: If the tempe is hot and the truck status is on loading, there will be alert to Bar. The temperature range beer will be down (-20C) to make the the beer is cool enough.
+- case 3: If the tempe is danger and the truck status is on loading, the button change status to in driving will be disable. And Bar need to wait to normal tempe to drive
+
+- case 4: Bar already loaded the beer in normal tempe but when he is driving, the tempe is hot. The message will be "The temperature range beer will be down (-20C) , click Reload button to make sure the beer is cool enough"
+
+- case 5: Bar already loaded the beer in (normal tempe or hot tempe) but when he is driving, the tempe is danger. The message will be "You need to find the place to make sure the beer is not corrupted".
+
+There are 5 truck statuses: "In Loading", "In driving", "Reload", "On Hold", "Continue", "Completed".
+
+The interval will get temperature from container to check temperature is suitable for beer or not. Time interval will be 5s
+
+*/
+
+
 class HomeController {
 
     constructor(WeatherService, BearService, TruckContainerService, $window, $timeout, $state) {
