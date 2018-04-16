@@ -112,7 +112,9 @@ class HomeController {
             this.loopToCheckContainerTempChange();
         }, 5000);
     }
-
+    /*
+	Show list button status
+    */
     setupStatusTruck() {
         this.truckStatus = this.TruckContainerService.getCurrentStatusTruck();
         if (this.truckStatus.id !== 'inloading') {
@@ -143,7 +145,9 @@ class HomeController {
                 break;
         }
     }
-
+    /*
+	Handle data truck and beer when user click to button “In Driving”
+    */
     handleDataForDriving() {
         this.listContainer.map(container => {
             container.currentLiter = container.maxLiter;
@@ -181,7 +185,9 @@ class HomeController {
             return data;
         });
     }
-
+    /*
+	Check the condition when user click to In Driving
+    */
     setupForInDriving() {
         this.handleDataForDriving();
         const maxValueCap = Math.max.apply(Math,this.listTypeOfBear.map(function(o){return o.capacity;}));
@@ -200,7 +206,9 @@ class HomeController {
 
         return isValid;
     }
-
+    /*
+	Handle when click button change status
+    */
     changeStatus(status) {
         switch (status) {
             case 'indriving': 
